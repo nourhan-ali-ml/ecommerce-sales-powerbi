@@ -6,7 +6,7 @@
 **Project Author:** Nourhan Ali  
 **Date:** February 2026  
 **Tools Used:** Power BI Desktop, Power Query, DAX  
-**Project Duration:** [3 days]
+**Project Duration:** [10 days]
 
 ---
 
@@ -16,7 +16,7 @@ This report presents a comprehensive analysis of e-commerce sales data covering 
 
 ### Key Achievements
 - Successfully integrated 4 disparate data sources into a unified Star Schema model
-- Developed 9+ advanced DAX measures including Time Intelligence calculations
+- Developed 9+ advanced DAX measures, including Time Intelligence calculations
 - Created an executive-level interactive dashboard with 9+ visualizations
 - Generated actionable insights leading to strategic recommendations
 
