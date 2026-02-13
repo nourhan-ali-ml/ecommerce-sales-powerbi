@@ -1,0 +1,11 @@
+product_id,product_name,category,subcategory,brand,cost_price
+PROD001,Wireless Mouse,Electronics,Computer Accessories,TechPro,800
+PROD002,Gaming Keyboard,Electronics,Computer Accessories,GameMaster,1800
+PROD003,LED Monitor 24",Electronics,Displays,ViewMax,2500
+PROD004,Laptop Bag,Accessories,Bags,CarryAll,3000
+PROD005,USB Flash Drive 64GB,Electronics,Storage,DataStore,450
+PROD006,Wireless Earbuds,Electronics,Audio,SoundWave,400
+PROD007,Phone Stand,Accessories,Phone Accessories,StandPro,700
+PROD008,Bluetooth Speaker,Electronics,Audio,BoomBox,1500
+PROD009,External Hard Drive 1TB,Electronics,Storage,DataVault,4000
+PROD010,HDMI Cable 2M,Electronics,Cables,ConnectPlus,600

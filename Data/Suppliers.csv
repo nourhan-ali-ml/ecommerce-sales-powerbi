@@ -1,0 +1,6 @@
+supplier_id,supplier_name,country,city,contact_person,rating
+SUP001,TechSource Ltd,Egypt,Cairo,Ahmed Khalil,4.5
+SUP002,ElectroMax Supply,Egypt,Alexandria,Mona Samy,4.8
+SUP003,Digital Warehouse,Egypt,Giza,Omar Fahmy,4.2
+SUP004,Premium Electronics,Egypt,Cairo,Dina Mostafa,4.7
+SUP005,Global Tech Partners,Egypt,Alexandria,Yasser Kamal,4.9
