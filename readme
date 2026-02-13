@@ -1,0 +1,385 @@
+# 📊 E-commerce Sales Analysis - Power BI Project
+
+![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
+![DAX](https://img.shields.io/badge/DAX-217346?style=for-the-badge&logo=microsoft-excel&logoColor=white)
+![Star Schema](https://img.shields.io/badge/Star%20Schema-0078D4?style=for-the-badge&logo=microsoft&logoColor=white)
+
+## 🎯 Project Overview
+
+A comprehensive business intelligence project analyzing **100 e-commerce transactions** worth **348K EGP** using **Power BI**, demonstrating advanced data modeling, DAX calculations, and interactive dashboard design.
+
+This project showcases real-world data analytics skills, including:
+- Multi-source data integration
+- Star Schema data modeling
+- Advanced DAX measures with Time Intelligence
+- Interactive dashboard design with executive-level UX
+
+---
+
+## 📁 Dataset Description
+
+### Data Sources (4 CSV Files)
+
+| File | Records | Description | Role |
+|------|---------|-------------|------|
+| **Sales.csv** | 100 | Transaction-level sales data | Fact Table |
+| **Customers.csv** | 15 | Customer information | Dimension Table |
+| **Products.csv** | 10 | Product catalog | Dimension Table |
+| **Suppliers.csv** | 5 | Supplier details | Dimension Table |
+
+### Sales Data Schema (Fact Table)
+- `transaction_id` - Unique transaction identifier
+- `date` - Transaction date (Jan-Apr 2024)
+- `customer_id` - Foreign key to Customers
+- `product_id` - Foreign key to Products
+- `supplier_id` - Foreign key to Suppliers
+- `quantity` - Units sold
+- `unit_price` - Price per unit
+- `payment_method` - Cash, Credit Card, Debit Card
+- `total_sales` - Calculated column (quantity × unit_price)
+
+---
+
+## 🏗️ Data Architecture
+
+### Star Schema Design
+
+```
+        Customers                Products
+             ↓                       ↓
+             → → → → Sales ← ← ← ← ←
+                      ↑
+                  Suppliers
+```
+
+**Relationships:**
+- Sales → Customers (Many-to-One via customer_id)
+- Sales → Products (Many-to-One via product_id)
+- Sales → Suppliers (Many-to-One via supplier_id)
+- Sales → DateTable (Many-to-One via date)
+
+---
+
+## 🔧 Tools & Technologies
+
+### Data Processing
+- **Power Query** - ETL (Extract, Transform, Load)
+  - Data cleaning and transformation
+  - Data type conversions
+  - Custom column calculations
+  - Multi-source data integration
+
+### Data Modeling
+- **Star Schema Architecture**
+- **Date Table** for Time Intelligence
+- **Relationships** with proper cardinality
+
+### Analytics
+- **DAX (Data Analysis Expressions)**
+  - Basic aggregations
+  - Time Intelligence functions
+  - Conditional logic
+  - Iterator functions (SUMX, MAXX)
+
+### Visualization
+- **Power BI Desktop**
+- Interactive slicers and filters
+- Multiple chart types
+- Executive-level dashboard design
+
+---
+
+## 📈 DAX Measures Implemented
+
+### Basic Metrics
+```dax
+Total Revenue = SUMX(Sales, Sales[quantity] * Sales[unit_price])
+
+Total Quantity = SUM(Sales[quantity])
+
+Total Transactions = COUNTROWS(Sales)
+
+Average Order Value = DIVIDE([Total Revenue], [Total Transactions], 0)
+
+Total Customers = DISTINCTCOUNT(Sales[customer_id])
+```
+
+### Time Intelligence
+```dax
+DateTable = 
+ADDCOLUMNS(
+    CALENDAR(DATE(2024,1,1), DATE(2024,12,31)),
+    "Year", YEAR([Date]),
+    "Month", FORMAT([Date], "MMM"),
+    "MonthNumber", MONTH([Date]),
+    "Quarter", "Q" & FORMAT([Date], "Q"),
+    "Day", DAY([Date])
+)
+
+Previous Month Sales = 
+CALCULATE(
+    [Total Revenue],
+    DATEADD(DateTable[Date], -1, MONTH)
+)
+
+YTD Sales = 
+TOTALYTD([Total Revenue], DateTable[Date])
+```
+
+### Growth Analysis
+```dax
+MoM Growth % = 
+VAR CurrentMonth = [Total Revenue]
+VAR PreviousMonth = [Previous Month Sales]
+VAR Growth = DIVIDE(CurrentMonth - PreviousMonth, PreviousMonth) * 100
+RETURN IF(ISBLANK(PreviousMonth), BLANK(), Growth)
+```
+
+### Top Performers
+```dax
+Top Customer = 
+VAR TopCustomerID = 
+    MAXX(
+        TOPN(1, 
+            SUMMARIZE(Sales, Customers[customer_name], "Revenue", [Total Revenue]),
+            [Revenue], DESC
+        ),
+        Customers[customer_name]
+    )
+RETURN TopCustomerID
+
+Top Product = 
+VAR TopProductName = 
+    MAXX(
+        TOPN(1,
+            SUMMARIZE(Sales, Products[product_name], "Revenue", [Total Revenue]),
+            [Revenue], DESC
+        ),
+        Products[product_name]
+    )
+RETURN TopProductName
+```
+
+---
+
+## 📊 Dashboard Components
+
+### KPI Cards (8 Total)
+1. **Total Revenue** - 348K EGP
+2. **Total Customers** - 15 unique customers
+3. **Total Transactions** - 100 transactions
+4. **Average Order Value** - 3.48K EGP
+5. **YTD Sales** - Year-to-date performance
+6. **MoM Growth %** - Month-over-month growth
+7. **Top Customer** - Best performing customer
+8. **Top Product** - Best selling product
+
+### Visualizations
+
+| Visual Type | Purpose | Data Used |
+|------------|---------|-----------|
+| **Pie Chart** | Revenue distribution by category | Products[category], Total Revenue |
+| **Bar Chart** | Top 5 products by sales | Products[product_name], Total Revenue |
+| **Line Chart** | Revenue trend over time | DateTable[Month], Total Revenue |
+| **Donut Chart** | Customer segment analysis | Customers[segment], Total Revenue |
+| **Column Chart** | Payment method comparison | Sales[payment_method], Total Revenue |
+| **Map** | Geographic revenue distribution | Customers[country/city], Total Revenue |
+| **Matrix** | Supplier performance by month | Suppliers, DateTable[Month], Total Revenue |
+| **Table** | Detailed supplier statistics | Supplier details with metrics |
+| **Gauge** | Target vs Actual revenue | Total Revenue vs Target |
+
+### Interactive Slicers
+- **Date Range** - Filter by time period
+- **Payment Method** - Cash, Credit Card, Debit Card
+- **Customer Segment** - Premium, VIP, Regular
+- **Category** - Electronics, Accessories
+
+---
+
+## 🔍 Key Business Insights
+
+### 1. Revenue Performance
+- **Total Revenue:** 348,220 EGP from 100 transactions
+- **Average Order Value:** 3,482 EGP
+- **Customer Base:** 15 active customers
+
+### 2. Product Analysis
+- **Top Product:** External Hard Drive 1TB (highest revenue contributor)
+- **Category Distribution:** Electronics dominates sales
+- **Top 5 Products:** Concentrated revenue stream
+
+### 3. Customer Insights
+- **Top Customer:** Hassan Fathy (highest spending customer)
+- **Segment Distribution:** Mix of Premium, VIP, and Regular customers
+- **Geographic Spread:** Concentrated in major Egyptian cities
+
+### 4. Supplier Analysis
+- **Top Supplier:** ElectroMax Supply (94,300 EGP revenue)
+- **Supplier Concentration:** Revenue distributed across 5 suppliers
+- **Performance Tracking:** Monthly supplier performance matrix
+
+### 5. Payment Behavior
+- **Credit Card:** Most popular payment method
+- **Payment Mix:** Diverse payment options utilized
+- **Digital Adoption:** Strong preference for card payments
+
+### 6. Temporal Trends
+- **Time Period:** January - April 2024
+- **Growth Tracking:** Month-over-month performance monitoring
+- **Seasonal Patterns:** Visible through time-series analysis
+
+---
+
+## 🚀 Project Workflow
+
+### Phase 1: Data Preparation
+1. ✅ Collected 4 separate CSV files
+2. ✅ Imported into Power BI via Get Data
+3. ✅ Opened Power Query Editor
+4. ✅ Validated data types for all columns
+5. ✅ Created calculated column (total_sales)
+6. ✅ Applied Close & Apply
+
+### Phase 2: Data Modeling
+1. ✅ Switched to Model View
+2. ✅ Created Star Schema relationships
+3. ✅ Built Date Table with DAX
+4. ✅ Marked Date Table and created relationships
+5. ✅ Validated cardinality (Many-to-One)
+
+### Phase 3: DAX Development
+1. ✅ Created basic measures (Revenue, Quantity, Transactions)
+2. ✅ Built Time Intelligence measures
+3. ✅ Developed growth metrics (MoM %)
+4. ✅ Implemented Top Performer calculations
+5. ✅ Added conditional formatting logic
+
+### Phase 4: Dashboard Design
+1. ✅ Created KPI cards for key metrics
+2. ✅ Built multiple chart types
+3. ✅ Added interactive slicers
+4. ✅ Applied consistent color theme
+5. ✅ Designed executive-level layout
+6. ✅ Tested interactivity and filters
+
+### Phase 5: Documentation
+1. ✅ Created comprehensive README
+2. ✅ Documented all DAX measures
+3. ✅ Captured key insights
+4. ✅ Prepared for portfolio presentation
+
+---
+
+## 💡 Skills Demonstrated
+
+### Technical Skills
+- ✅ **Power Query:** ETL, data transformation, multi-source integration
+- ✅ **Data Modeling:** Star Schema, relationship management
+- ✅ **DAX:** Aggregations, Time Intelligence, iterators, conditional logic
+- ✅ **Data Visualization:** Multiple chart types, UX design
+- ✅ **Business Intelligence:** KPI development, metric tracking
+
+### Analytical Skills
+- ✅ Data cleaning and validation
+- ✅ Business metric calculation
+- ✅ Trend analysis
+- ✅ Performance tracking
+- ✅ Insight generation
+
+### Design Skills
+- ✅ Dashboard layout and composition
+- ✅ Color theory and visual hierarchy
+- ✅ User experience (UX) design
+- ✅ Executive-level presentation
+
+---
+
+## 📂 Project Structure
+
+```
+E-commerce-Sales-Analysis/
+│
+├── Data/
+│   ├── Sales.csv
+│   ├── Customers.csv
+│   ├── Products.csv
+│   └── Suppliers.csv
+│
+├── E-commerce Sales Analysis.pbix
+│
+├── Documentation/
+│   ├── README.md
+│   ├── Project_Report.docx
+│   └── Dashboard_Screenshot.png
+│
+└── Exports/
+    └── Dashboard.pdf
+```
+
+---
+
+## 🎓 Learning Outcomes
+
+Through this project, I developed expertise in:
+
+1. **Multi-source Data Integration**
+   - Combining disparate data sources into unified model
+   - Managing relationships between fact and dimension tables
+
+2. **Advanced DAX**
+   - Time Intelligence functions (DATEADD, TOTALYTD)
+   - Iterator functions (SUMX, MAXX)
+   - Conditional logic (IF, ISBLANK, DIVIDE)
+   - Context manipulation (CALCULATE)
+
+3. **Data Modeling Best Practices**
+   - Star Schema architecture
+   - Proper relationship cardinality
+   - Date table implementation
+
+4. **Dashboard UX Design**
+   - Visual hierarchy and layout
+   - Interactive filtering
+   - Executive-level presentation
+
+---
+
+## 🔮 Future Enhancements
+
+### Potential Additions
+- [ ] **Forecasting:** Add predictive analytics for future sales
+- [ ] **Customer Segmentation:** RFM (Recency, Frequency, Monetary) analysis
+- [ ] **Product Recommendations:** Association rules mining
+- [ ] **Profit Analysis:** Add cost data for profit margin calculations
+- [ ] **Inventory Tracking:** Integration with stock levels
+- [ ] **Real-time Data:** Connect to live data source
+- [ ] **Mobile Layout:** Optimize for mobile viewing
+- [ ] **Drill-through Pages:** Detailed product/customer pages
+
+---
+
+## 📞 Contact & Portfolio
+
+**Created by:** Nourhan Ali
+
+🔗 **LinkedIn:** http://linkedin.com/in/nourhan-ali-71289415b   
+📧 **Email:** bio.eng.nourhanali@gmail.com  
+🐱 **GitHub:** https://github.com/nourhan-ali-ml
+
+---
+
+## 📄 License
+
+This project is created for educational and portfolio purposes.
+
+---
+
+## 🙏 Acknowledgments
+
+- **Data:** Synthetic e-commerce dataset created for learning purposes
+- **Tools:** Microsoft Power BI Desktop
+- **Inspiration:** Real-world business intelligence practices
+
+---
+
+**⭐ If you found this project helpful, please consider giving it a star!**
